@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { getProjects, toMediaUrl } from "@/lib/api";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -68,8 +69,8 @@ export default function PortafolioPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {projects.map((project: Project) => (
+                <Link key={project.id} href={`/portafolio/${project.id}`} className="block">
                 <Card
-                  key={project.id}
                   className="group hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 hover:-translate-y-2 border-0 bg-card/90 backdrop-blur-sm overflow-hidden"
                 >
                   <div className="aspect-video overflow-hidden rounded-t-lg relative">
@@ -106,30 +107,35 @@ export default function PortafolioPage() {
                     <div className="flex gap-2">
                       {project.projectUrl && (
                         <Button
-                          asChild
                           size="sm"
                           className="flex-1 hover:shadow-lg hover:shadow-primary/25 transition-all duration-300"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            window.open(project.projectUrl!, "_blank", "noopener,noreferrer");
+                          }}
                         >
-                          <a href={project.projectUrl} target="_blank" rel="noopener noreferrer">
-                            Ver Demo
-                          </a>
+                          Ver Demo
                         </Button>
                       )}
                       {project.codeUrl && (
                         <Button
-                          asChild
                           variant="outline"
                           size="sm"
                           className="flex-1 bg-transparent hover:bg-primary/5 hover:border-primary/50 transition-all duration-300"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            window.open(project.codeUrl!, "_blank", "noopener,noreferrer");
+                          }}
                         >
-                          <a href={project.codeUrl} target="_blank" rel="noopener noreferrer">
-                            Ver Código
-                          </a>
+                          Ver Código
                         </Button>
                       )}
                     </div>
                   </CardContent>
                 </Card>
+                </Link>
               ))}
             </div>
           )}

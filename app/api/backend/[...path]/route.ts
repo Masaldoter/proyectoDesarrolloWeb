@@ -8,8 +8,9 @@ const API_BASE = (process.env.NEXT_PUBLIC_API_BASE_URL || "https://localhost:725
 // Agente HTTPS que acepta el certificado de desarrollo (solo dev)
 const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 
-export async function GET(req: Request, ctx: { params: { path: string[] } }) {
-  const segments = ctx.params?.path || [];
+export async function GET(req: Request, ctx: { params: Promise<{ path: string[] }> }) {
+  const { path } = await ctx.params;
+  const segments = path || [];
   const urlIn = new URL(req.url);
   const target = `${API_BASE}/${segments.join("/")}${urlIn.search}`;
 
@@ -23,8 +24,9 @@ export async function GET(req: Request, ctx: { params: { path: string[] } }) {
   }
 }
 
-async function forwardWithBody(method: "POST" | "PUT" | "DELETE", req: Request, ctx: { params: { path: string[] } }) {
-  const segments = ctx.params?.path || [];
+async function forwardWithBody(method: "POST" | "PUT" | "DELETE", req: Request, ctx: { params: Promise<{ path: string[] }> }) {
+  const { path } = await ctx.params;
+  const segments = path || [];
   const urlIn = new URL(req.url);
   const target = `${API_BASE}/${segments.join("/")}${urlIn.search}`;
   const contentType = req.headers.get("content-type") || undefined;
@@ -51,14 +53,14 @@ async function forwardWithBody(method: "POST" | "PUT" | "DELETE", req: Request, 
   }
 }
 
-export async function POST(req: Request, ctx: { params: { path: string[] } }) {
+export async function POST(req: Request, ctx: { params: Promise<{ path: string[] }> }) {
   return forwardWithBody("POST", req, ctx);
 }
 
-export async function PUT(req: Request, ctx: { params: { path: string[] } }) {
+export async function PUT(req: Request, ctx: { params: Promise<{ path: string[] }> }) {
   return forwardWithBody("PUT", req, ctx);
 }
 
-export async function DELETE(req: Request, ctx: { params: { path: string[] } }) {
+export async function DELETE(req: Request, ctx: { params: Promise<{ path: string[] }> }) {
   return forwardWithBody("DELETE", req, ctx);
 }

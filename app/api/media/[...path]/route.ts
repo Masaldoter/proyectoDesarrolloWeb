@@ -8,8 +8,9 @@ const ORIGIN = API_BASE.replace(/\/api$/, "");
 
 const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 
-export async function GET(req: Request, ctx: { params: { path: string[] } }) {
-  const segments = ctx.params?.path || [];
+export async function GET(req: Request, ctx: { params: Promise<{ path: string[] }> }) {
+  const { path } = await ctx.params;
+  const segments = path || [];
   const urlIn = new URL(req.url);
   const target = `${ORIGIN}/${segments.join("/")}${urlIn.search}`;
 
