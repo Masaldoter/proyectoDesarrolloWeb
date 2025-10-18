@@ -44,7 +44,7 @@ export default function AdminHome() {
             </CardHeader>
             <CardContent className="pt-0">
               <Button variant="outline" size="sm" onClick={() => clearSelected()}>
-                Cambiar usuario (ver todos)
+                Cambiar Usuario (ver todos)
               </Button>
             </CardContent>
           </Card>
